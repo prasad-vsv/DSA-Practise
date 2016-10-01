@@ -11,7 +11,7 @@ public class LongestCommonSubsequence {
 
 	public static long getNextLong() {
 		return Long.parseLong(s.nextLine());
-	}
+	} 
 
 	public static int[] getNextIntegerArray() {
 		String line = s.nextLine();
