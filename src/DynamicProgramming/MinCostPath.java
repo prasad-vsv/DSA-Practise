@@ -147,7 +147,8 @@ public class MinCostPath {
                 {1, 5, 3} };
 		int[][] optimizedCosts = new int[3][3];
 		//starting point is (0,0)
-		
+		//the idea is that since the only way to go to a cell is through the top cell or through the left cell or through the diagonally top left cell, we calculate the minimum cost to reach each of these cells
+		// and then minimum of all these and add the cost to come to the target cell from either of these 3 cells. We use bottom up DP to solve it
 		int x = getNextInt();
 		int y = getNextInt();
 		for(int i=0; i<=2;++i){
