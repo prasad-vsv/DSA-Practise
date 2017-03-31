@@ -155,6 +155,7 @@ public class LevelOrderTraversal {
 	private static void lot(n a) {
 		Queue<n> q = new LinkedList();
 		q.add(a);
+		n dummy = new n(Integer.MIN_VALUE); // to indicate that a level end is reached
 		q.add(dummy);
 		int count =0;
 		while(!q.isEmpty() ){
