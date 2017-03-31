@@ -87,7 +87,7 @@ class LIS{
 		elementsIncluded = new ArrayList<>();
 		largestElement = -1;
 	}
-	public LIS(int largest){
+	public LIS(int largest){  
 		elementsIncluded = new ArrayList<>();
 		largestElement = largest;
 	}
