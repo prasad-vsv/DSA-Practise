@@ -32,7 +32,7 @@ public class CoinChange {
 	public static long[] getNextLongArray() {
 		String line = s.nextLine();
 		String[] tokens = line.split(" ");
-		long[] input = new long[tokens.length];
+		long[] input = new long[tokens.length]; 
 		for (int i = 0; i < tokens.length; ++i) {
 			input[i] = Long.parseLong(tokens[i]);
 		}
