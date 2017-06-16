@@ -142,7 +142,7 @@ public class FibonacciSeries {
 	}
 
 	public static void main(String[] args) {
-		// code
+		// http://www.geeksforgeeks.org/program-for-nth-fibonacci-number/
 		Scanner s = new Scanner(System.in);
 		int n = Integer.parseInt(s.nextLine());
 		for (int i = 0; i < n; ++i) {
