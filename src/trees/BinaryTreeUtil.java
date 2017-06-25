@@ -751,7 +751,7 @@ public class BinaryTreeUtil {
 	}
 	
 	public static Node createDoubleTree(Node root){
-		//we use post order traversal because, that ways we handle children first and then the parent
+		//we use post order traversal because, that ways we handle children first and then the parent	
 		if(root == null){
 			return null;
 		}
@@ -763,5 +763,32 @@ public class BinaryTreeUtil {
 		root.left = duplicate;
 		return root;
 	}
+	
+	
+	public static boolean isFoldable(Node root){
+		//the idea is to mirror the left subtree and then check if it's structure matches right subtree
+		if(root == null){
+			return true;
+		}
+		if((root.left == null  && root.right != null) || (root.left != null && root.right==null)  ){
+			return false;
+		}
+		root.left = mirror(root.left);
+		//now check if the structure of left subtree matches that of right subtree
+		
+		
+		return checkIfSimilar(root.left, root.right);
+	}
+	
+	private static boolean checkIfSimilar(Node root1, Node root2){
+		if(root1 == null && root2 == null){
+			return true;
+		}
+		if((root1==null && root2!= null )|| (root1!= null && root2==null)){
+			return false;
+		}
+		return checkIfSimilar(root1.left, root2.left) && checkIfSimilar(root1.right, root2.right);
+	}
+	
 	
 }
