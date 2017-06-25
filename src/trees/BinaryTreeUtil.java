@@ -413,11 +413,12 @@ public class BinaryTreeUtil {
 		// now we have to divide the preorder string into left and right parts,
 		// using the logic that, the first element in the right part of inorder
 		// that occurs in preorder is where it's right part starts
-		if("".equals(inorder) ||"".equals(preorder)){
+		if ("".equals(inorder) || "".equals(preorder)) {
 			return null;
 		}
-		if(inorder.length() == 1 && preorder.length() ==1){
-			//that means that the recursion has narrowed down to one element. so simply return that element
+		if (inorder.length() == 1 && preorder.length() == 1) {
+			// that means that the recursion has narrowed down to one element.
+			// so simply return that element
 			return new Node(Integer.parseInt(inorder));
 		}
 		String s = preorder.substring(0, 1);
@@ -436,18 +437,49 @@ public class BinaryTreeUtil {
 		// exists in the set. The first one which does is the root of the right
 		// sub tree
 		int rightRootPreorderIndex = Integer.MIN_VALUE;
-		for(int i=0; i<preorder.length(); ++i){
-			if(set.contains(preorder.charAt(i))){
+		for (int i = 0; i < preorder.length(); ++i) {
+			if (set.contains(preorder.charAt(i))) {
 				rightRootPreorderIndex = i;
 				break;
 			}
 		}
-		//if rightRootPreorderIndex is not initialized, that means that there is no right part in the preorder
-		String leftPreorder = preorder.substring(1,rightRootPreorderIndex);
+		// if rightRootPreorderIndex is not initialized, that means that there
+		// is no right part in the preorder
+		String leftPreorder = preorder.substring(1, rightRootPreorderIndex);
 		String rightPreorder = preorder.substring(rightRootPreorderIndex);
-		
-		root.left = formTree(leftInorder,leftPreorder);
+
+		root.left = formTree(leftInorder, leftPreorder);
 		root.right = formTree(rightInorder, rightPreorder);
 		return root;
+	}
+
+	public static int diameter(Node root) {
+		// PITFALL: usually the intuitive idea is that we return
+		// height(root.left) + 1 + height(root.right) but that is wrong
+		// the idea is that the left sub tree may be very large and right
+		// subtree may be vey small and so the maximum diameter can occur with
+		// both the leaves from left subtree itself or viceversa
+
+		// The height is calculated at every level again and again, this can
+		// instead be cached for each level while calculating for the root level
+		// and be reused. that would reduce the time complexity from O(n^2) to
+		// O(n) or we can calculate the height while calculating the diameter
+		// itslef
+
+		// Approach 1: without caching
+		int diameterGoingThroughRoot = 1 + height(root.left)
+				+ height(root.right);
+		int diameterOnlyFromLeftRoot = diameter(root.left);
+		int diameterOnlyFromRightRoot = diameter(root.right);
+
+		return Math.max(
+				Math.max(diameterOnlyFromLeftRoot, diameterOnlyFromRightRoot),
+				diameterGoingThroughRoot);
+
+		// Approach 2: with caching. instead of calling height method, have one
+		// more method called cachedHeight
+		// that method should cache the results of heights of smalltrees using
+		// DP memoization and then use this cache to return values immediately
+		// for smaller subtrees
 	}
 }
