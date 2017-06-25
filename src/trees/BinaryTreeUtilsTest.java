@@ -140,8 +140,8 @@ public class BinaryTreeUtilsTest {
 			return s3;
 		}
 	}
-
-	public static void main(String[] args) {
+	
+	public static Node createTree(){
 		Node root = new Node(1);
 		root.left = new Node(2);
 		root.right = new Node(3);
@@ -150,6 +150,11 @@ public class BinaryTreeUtilsTest {
 		root.right.left = new Node(6);
 		root.right.right = new Node(7);
 		
+		return root;
+	}
+
+	public static void main(String[] args) {
+		Node root = createTree();
 		//testing inorder traversal
 		//expected answer is 4251637
 		System.out.println("inorderRecursionPrint:");
@@ -200,5 +205,8 @@ public class BinaryTreeUtilsTest {
 		System.out.println("convertToCircularDoubleLinkedList: " + BinaryTreeUtil.convertToCircularDoublyLinkedList(root));
 		
 		System.out.println("formTree: " + BinaryTreeUtil.formTree("4251637","1245367"));
+		
+		
+		BinaryTreeUtil.convertToChildrenSumPropertyHoldingTree(createTree());
 	}
 }

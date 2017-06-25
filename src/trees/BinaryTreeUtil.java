@@ -480,6 +480,65 @@ public class BinaryTreeUtil {
 		// more method called cachedHeight
 		// that method should cache the results of heights of smalltrees using
 		// DP memoization and then use this cache to return values immediately
-		// for smaller subtrees
+		// for smaller subtrees	
+	}
+	
+	public static boolean checkChildrenSumProperty(Node root){
+		//if the root is leaf, return true
+		if(root.left == null && root.right == null){
+			return true;
+		}
+		int leftsum = 0;
+		if(root.left!=null){
+			leftsum = root.left.data;
+		}
+		int rightsum = 0;
+		if(root.right !=null){
+			rightsum+= root.right.data;
+		}
+		boolean check = (root.data == leftsum+ rightsum);
+			
+		return check && checkChildrenSumProperty(root.left) && checkChildrenSumProperty(root.right);
+	}
+	
+	public static void convertToChildrenSumPropertyHoldingTree(Node root){
+		//go fixing from bottom up and when you have to, go down from a point to increment the values accordingly.
+		//if root return
+		if(root.left == null && root.right == null){
+			return ;
+		}
+		
+		
+		
+		while(true){
+			if(checkChildrenSumProperty(root)){
+				break;
+			}
+			int leftsum = 0;
+			if(root.left != null){
+				leftsum = root.left.data;
+			}
+			
+			int rightsum = 0;
+			if(root.right != null){
+				rightsum = root.right.data;
+			}
+			if(root.data == (leftsum + rightsum)){
+				convertToChildrenSumPropertyHoldingTree(root.left);
+				convertToChildrenSumPropertyHoldingTree(root.right);
+			}
+			else{
+				//if root.data is less, simply increment it and return. the parent would then have to adjust accordingly
+				if(root.data< (leftsum+rightsum)){
+					root.data = leftsum+rightsum;
+				}
+				//else pick left child, increment its value and then call this function recursively with left child
+				else{
+					int diff = Math.abs(root.data - leftsum - rightsum);
+					root.left.data += diff;
+					convertToChildrenSumPropertyHoldingTree(root.left);
+				}
+			}
+		}
 	}
 }
