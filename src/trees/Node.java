@@ -4,6 +4,8 @@ class Node{
 	int data;
 	Node left = null;
 	Node right = null;
+	
+	static Node dummy = new Node(Integer.MIN_VALUE);
 	boolean visited = false;
 	Node(int _data){
 		this.data = _data;

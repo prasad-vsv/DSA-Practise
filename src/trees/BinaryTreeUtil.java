@@ -605,4 +605,163 @@ public class BinaryTreeUtil {
 		}
 
 	}
+
+	public static int convertToSumTree(Node root) {
+		if (root == null) {
+			return 0;
+		}
+		int left = convertToSumTree(root.left);
+		int right = convertToSumTree(root.right);
+		int temp = root.data;
+		root.data = left + right;
+		return temp + left + right;
+	}
+
+	public static boolean isBalanced(Node root) {
+		// the idea is to find if height(root.left)== height(root.right) and if
+		// left tree and right tree are balanced
+		// an optimization is that instead of calculating height for every level
+		// again, we could calculate them all in one go.
+		return isBalanced(root, new Height(0));
+		// another way is to cache the heights of all nodes using memoization
+		// and then use that instead of recalculating heights at every level
+	}
+
+	private static boolean isBalanced(Node root, Height h) {
+		if (root == null) {
+			h = new Height(0);
+			return true;
+		}
+		h.h++;
+		Height leftHeight = new Height(0);
+		Height rightHeight = new Height(0);
+		boolean left = isBalanced(root.left, leftHeight);
+		boolean right = isBalanced(root.right, rightHeight);
+
+		h.h = 1 + Math.max(leftHeight.h, rightHeight.h);
+
+		return left && right && (Math.abs(rightHeight.h - leftHeight.h) <= 1);
+	}
+
+	public boolean isRootToLeafPathEqualTON(Node root, int n) {
+		// is root null?
+		if (root == null) {
+			if (n == 0) {
+				return true;
+			}
+			return false;
+		}
+		// is root a leaf node?
+		if (root.right == null && root.right == null) {
+			if (root.data != n) {
+				return false;
+			}
+			return true;
+		}
+
+		return isRootToLeafPathEqualTON(root.left, n - root.data)
+				|| isRootToLeafPathEqualTON(root.right, n - root.data);
+	}
+
+	private static boolean isLeaf(Node root) {
+		if (root == null) {
+			return false;
+		}
+		if (root.left == null && root.right == null) {
+			return true;
+		}
+		return false;
+	}
+
+	public static boolean checkSumTree(Node root) {
+		// PITFALL: Usually we would calculate sum(root.left), sum(root.right)
+		// and then check if their sum == root.data and then recursively check
+		// for root.left and root.right. But this is O(n^2) and can be reduced
+		// easily because, if we assume that the left subtree is sumTree and
+		// right subtree is sumTree(which should be the case anyways for the
+		// overall tree to be sumTree), then the sum of the current subtree =
+		// 2*root.data; if the subtree just has a leaf, then the value of the
+		// leaf is it's sum.
+		if (root == null || (root.left == null && root.right == null)) {
+			return true;
+		}
+		int leftSum = 0;
+
+		if (root.left != null) {// there should be a check for isLeaf for this
+								// left element, if so, we should directly
+								// consider this element's value
+			if (isLeaf(root.left)) {
+				leftSum = root.left.data;
+			} else {
+				leftSum = 2 * root.left.data;
+			}
+		}
+		int rightSum = 0;
+		
+		if (root.right != null) {
+			if(isLeaf(root.right)){
+				rightSum  = root.right.data;
+			}else{
+				rightSum = 2* root.right.data;
+			}
+		}
+		// check if rightSum + leftSum == root.data
+		if (root.data != (leftSum + rightSum)) {
+			return false;
+		}
+		// recursively check for left and right sub trees
+		return checkSumTree(root.left) && checkSumTree(root.right);
+	}
+	
+	public static int getLevelOfKey(Node root, int key){
+		if(root == null){
+			return 0;
+		}
+		if(root.data == key){
+			return 1;
+		}
+		//go with level order traversal and track level in a key.
+		int level = 1;
+		Node cur = root;
+		Node dummy = Node.dummy;
+		Queue<Node> q  = new LinkedList<>();
+		q.add(cur);
+		q.add(dummy);
+		while(!q.isEmpty()){
+			cur = q.poll();
+			if(cur.equals(dummy)){
+				++level;
+				continue;
+			}
+			if(cur.data == key){
+				//data found. return level
+				break;
+			}
+			if(cur.left != null){
+				q.add(cur.left);
+			}
+			if(cur.right != null){
+				q.add(cur.right);
+			}
+			if(q.peek().equals(dummy)){
+				q.add(dummy);
+			}
+		}
+		return level;
+	}
+	
+	public static Node createDoubleTree(Node root){
+		//we use post order traversal because, that ways we handle children first and then the parent
+		if(root == null){
+			return null;
+		}
+		createDoubleTree(root.left);
+		createDoubleTree(root.right);
+		Node temp = root.left;
+		Node duplicate = new Node(root.data);
+		duplicate.left = temp;
+		root.left = duplicate;
+		return root;
+	}
+	
 }

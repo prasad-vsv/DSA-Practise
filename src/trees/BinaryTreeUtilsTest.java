@@ -211,5 +211,9 @@ public class BinaryTreeUtilsTest {
 		
 		System.out.println("Boundary Traversal: ");
 		BinaryTreeUtil.boundaryTraversalPrint(createTree());
+		
+		System.out.println("getLevelOfKey:" + BinaryTreeUtil.getLevelOfKey(createTree(), 4));
+		
+		System.out.println("createDoubleTree: " + BinaryTreeUtil.createDoubleTree(createTree()));
 	}
 }
