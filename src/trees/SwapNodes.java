@@ -249,7 +249,7 @@ public class SwapNodes {
 }
 
 
-class Node{
+/*class Node{
 	int data;
 	Node left;
 	Node right;
@@ -266,4 +266,4 @@ class Node{
 		return data+"";
 	}
 	
-}
+}*/
