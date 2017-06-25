@@ -149,7 +149,7 @@ public class BinaryTreeUtilsTest {
 		root.left.right = new Node(5);
 		root.right.left = new Node(6);
 		root.right.right = new Node(7);
-		
+		root.left.right.left = new Node(10);
 		return root;
 	}
 
@@ -208,5 +208,8 @@ public class BinaryTreeUtilsTest {
 		
 		
 		BinaryTreeUtil.convertToChildrenSumPropertyHoldingTree(createTree());
+		
+		System.out.println("Boundary Traversal: ");
+		BinaryTreeUtil.boundaryTraversalPrint(createTree());
 	}
 }
