@@ -4,7 +4,8 @@ class Node{
 	int data;
 	Node left = null;
 	Node right = null;
-	
+	Node rightSibling = null;
+	Node parent = null;
 	static Node dummy = new Node(Integer.MIN_VALUE);
 	boolean visited = false;
 	Node(int _data){
@@ -14,6 +15,15 @@ class Node{
 		this.data = _data;
 		left = n1;
 		right = n2;
+	}
+	
+	//copy constructor
+	Node(Node other){
+		this.data = other.data;
+		this.left = other.left;
+		this.right = other.right;
+		this.rightSibling = other.rightSibling;
+		this.parent = other.parent;
 	}
 	@Override
 	public String toString() {

@@ -149,7 +149,7 @@ public class BinaryTreeUtilsTest {
 		root.left.right = new Node(5);
 		root.right.left = new Node(6);
 		root.right.right = new Node(7);
-		root.left.right.left = new Node(10);
+//		root.left.right.left = new Node(10);
 		return root;
 	}
 
@@ -215,5 +215,20 @@ public class BinaryTreeUtilsTest {
 		System.out.println("getLevelOfKey:" + BinaryTreeUtil.getLevelOfKey(createTree(), 4));
 		
 		System.out.println("createDoubleTree: " + BinaryTreeUtil.createDoubleTree(createTree()));
+		
+		System.out.println("printAncestors:");
+		BinaryTreeUtil.printAncestors(createTree(), 4);
+		
+		
+		Node temp = new Node(2);
+		temp.right = new Node(5);
+		temp.left = new Node(4);
+		System.out.println("checkIfOneTreeIsASubtreeOfAnother:" + BinaryTreeUtil.checkIfOneTreeIsASubtreeOfAnother(createTree(), temp, false));
+		
+//		System.out.println("removeNodesThatDontLieInPathOfSumK:"+ BinaryTreeUtil.removeNodesThatDontLieInPathOfSumK(BinaryTreeUtil.formTree("841391514212516310117", "124891314155123671011"),20 , 0));
+		System.out.println("printleftView:" );
+		BinaryTreeUtil.printLeftView(createTree());
+		
+		System.out.println("checkIfLeavesAreAtSameLevel:" + BinaryTreeUtil.checkIfLeavesAreAtSameLevel(createTree()));
 	}
 }

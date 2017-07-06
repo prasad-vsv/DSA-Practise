@@ -445,11 +445,21 @@ public class BinaryTreeUtil {
 		}
 		// if rightRootPreorderIndex is not initialized, that means that there
 		// is no right part in the preorder
-		String leftPreorder = preorder.substring(1, rightRootPreorderIndex);
-		String rightPreorder = preorder.substring(rightRootPreorderIndex);
+		String leftPreorder =null;
+		String rightPreorder =null;
+		if(rightRootPreorderIndex <preorder.length()){
+			 leftPreorder = preorder.substring(1, rightRootPreorderIndex);
+			 rightPreorder = preorder.substring(rightRootPreorderIndex);
+		}
+		if(!"".equals(leftPreorder)){
+			root.left = formTree(leftInorder, leftPreorder);
+		}
+		if(!"".equals(rightPreorder)){
+			root.right = formTree(rightInorder, rightPreorder);
+		}
 
-		root.left = formTree(leftInorder, leftPreorder);
-		root.right = formTree(rightInorder, rightPreorder);
+//		root.left = formTree(leftInorder, leftPreorder);
+//		root.right = formTree(rightInorder, rightPreorder);
 		return root;
 	}
 
@@ -697,12 +707,12 @@ public class BinaryTreeUtil {
 			}
 		}
 		int rightSum = 0;
-		
+
 		if (root.right != null) {
-			if(isLeaf(root.right)){
-				rightSum  = root.right.data;
-			}else{
-				rightSum = 2* root.right.data;
+			if (isLeaf(root.right)) {
+				rightSum = root.right.data;
+			} else {
+				rightSum = 2 * root.right.data;
 			}
 		}
 		// check if rightSum + leftSum == root.data
@@ -712,47 +722,48 @@ public class BinaryTreeUtil {
 		// recursively check for left and right sub trees
 		return checkSumTree(root.left) && checkSumTree(root.right);
 	}
-	
-	public static int getLevelOfKey(Node root, int key){
-		if(root == null){
+
+	public static int getLevelOfKey(Node root, int key) {
+		if (root == null) {
 			return 0;
 		}
-		if(root.data == key){
+		if (root.data == key) {
 			return 1;
 		}
-		//go with level order traversal and track level in a key.
+		// go with level order traversal and track level in a key.
 		int level = 1;
 		Node cur = root;
 		Node dummy = Node.dummy;
-		Queue<Node> q  = new LinkedList<>();
+		Queue<Node> q = new LinkedList<>();
 		q.add(cur);
 		q.add(dummy);
-		while(!q.isEmpty()){
+		while (!q.isEmpty()) {
 			cur = q.poll();
-			if(cur.equals(dummy)){
+			if (cur.equals(dummy)) {
 				++level;
 				continue;
 			}
-			if(cur.data == key){
-				//data found. return level
+			if (cur.data == key) {
+				// data found. return level
 				break;
 			}
-			if(cur.left != null){
+			if (cur.left != null) {
 				q.add(cur.left);
 			}
-			if(cur.right != null){
+			if (cur.right != null) {
 				q.add(cur.right);
 			}
-			if(q.peek().equals(dummy)){
+			if (q.peek().equals(dummy)) {
 				q.add(dummy);
 			}
 		}
 		return level;
 	}
-	
-	public static Node createDoubleTree(Node root){
-		//we use post order traversal because, that ways we handle children first and then the parent	
-		if(root == null){
+
+	public static Node createDoubleTree(Node root) {
+		// we use post order traversal because, that ways we handle children
+		// first and then the parent
+		if (root == null) {
 			return null;
 		}
 		createDoubleTree(root.left);
@@ -763,32 +774,254 @@ public class BinaryTreeUtil {
 		root.left = duplicate;
 		return root;
 	}
-	
-	
-	public static boolean isFoldable(Node root){
-		//the idea is to mirror the left subtree and then check if it's structure matches right subtree
-		if(root == null){
+
+	public static boolean isFoldable(Node root) {
+		// the idea is to mirror the left subtree and then check if it's
+		// structure matches right subtree
+		if (root == null) {
 			return true;
 		}
-		if((root.left == null  && root.right != null) || (root.left != null && root.right==null)  ){
+		if ((root.left == null && root.right != null)
+				|| (root.left != null && root.right == null)) {
 			return false;
 		}
 		root.left = mirror(root.left);
-		//now check if the structure of left subtree matches that of right subtree
-		
-		
+		// now check if the structure of left subtree matches that of right
+		// subtree
+
 		return checkIfSimilar(root.left, root.right);
 	}
-	
-	private static boolean checkIfSimilar(Node root1, Node root2){
+
+	private static boolean checkIfSimilar(Node root1, Node root2) {
+		if (root1 == null && root2 == null) {
+			return true;
+		}
+		if ((root1 == null && root2 != null)
+				|| (root1 != null && root2 == null)) {
+			return false;
+		}
+		return checkIfSimilar(root1.left, root2.left)
+				&& checkIfSimilar(root1.right, root2.right);
+	}
+
+	public static boolean printAncestors(Node root, int key) {
+		// the idea is to go with post order recursion and return true if the
+		// data is found at a child level so that parents can then start
+		// printing their values
+		if (root == null) {
+			return false;
+		}
+		if (root.data == key) {
+			// key found; don't go to it's children level, dont print the
+			// current element. just return true
+			return true;
+
+		}
+		if (printAncestors(root.left, key) || printAncestors(root.right, key)) {
+			System.out.println(root.data + " ");
+			return true;
+		}
+		return false;
+	}
+
+	public static boolean checkIfOneTreeIsASubtreeOfAnother(Node root1,
+			Node root2, boolean started) {
+		// We assume that root2 is smaller, Actually we should check size of
+		// both and then decide
 		if(root1 == null && root2 == null){
 			return true;
 		}
-		if((root1==null && root2!= null )|| (root1!= null && root2==null)){
+		if(root1 == null || root2 == null){
 			return false;
 		}
-		return checkIfSimilar(root1.left, root2.left) && checkIfSimilar(root1.right, root2.right);
+		if(started){
+			if (root1.data == root2.data ) {
+				// this would be the start of the second subtree
+				
+				return checkIfOneTreeIsASubtreeOfAnother(root1.left, root2.left, true)
+						&& checkIfOneTreeIsASubtreeOfAnother(root1.right,
+								root2.right, true);
+			}
+			return false;
+		}
+		if(root1.data == root2.data){
+			return checkIfOneTreeIsASubtreeOfAnother(root1.left, root2.left, true)
+					&& checkIfOneTreeIsASubtreeOfAnother(root1.right,
+							root2.right, true);
+		}
+		return checkIfOneTreeIsASubtreeOfAnother(root1.left, root2, false) || checkIfOneTreeIsASubtreeOfAnother(root1.right, root2, false);
+		
+		
 	}
 	
+	public static void connectSiblings(Node root){
+		//INCOMPLETE
+		if(root == null){
+			return ;
+		}
+		root.left.parent = root.right.parent = root;
+		if(root.parent == null){
+			//root is the actual root
+			//so simply continue;
+			connectSiblings(root.left);
+			connectSiblings(root.right);
+		}
+		//else first set the sibling of the current element
+		//it can be parent's right child. If the parent's right child is null or itself, then it should go to parent's sibling's left child or right child if left child is null
+		Node parentRight = root.parent.right;
+		if(parentRight != null){
+			root.rightSibling= parentRight;
+		}else{
+			Node parentSibling = root.parent.rightSibling;
+			if(parentSibling != null){
+//				Node parentSiblingLeft
+			}
+		}
+	}
 	
+	public static boolean removeNodesThatDontLieInPathOfSumK(Node root,int k, int currentSum){
+		// http://www.geeksforgeeks.org/remove-all-nodes-which-lie-on-a-path-having-sum-less-than-k/
+		
+		//the idea is to check recursively if any one of the children lead to a complete path of sum k
+		//if no one does, return false, which means at a parent level, we remove this node link
+		//if one of them does and other dont, then remove just the path that doesnt and then return true'
+		if(currentSum>k){
+			return true;
+		}
+		if(root == null ){
+			return currentSum>=k;
+			
+		}
+		if(root.left == null && root.right == null){
+			currentSum+=root.data;
+			if(currentSum  >= k){
+				return true;
+			}else{
+				//look if children can lead to path and then return true if either one of them does, otherwise return false
+				boolean left = removeNodesThatDontLieInPathOfSumK(root.left, k, currentSum);
+				boolean right = removeNodesThatDontLieInPathOfSumK(root.right, k, currentSum);
+				if(left&&right){
+					//both lead to the correct sum paths
+					return true;
+				}
+				else if(left || right){
+					//one of them does
+					if(!left){
+						System.out.println("deleting:"+root.left.data);
+						delete(root.left);
+						root.left = null;
+					}
+					else if(!right){
+						System.out.println("deleting:"+root.right.data);
+						delete(root.right);
+						root.right = null;
+					}
+					
+					return true;
+				}
+				else{
+					System.out.println("deleting:"+root.left.data);
+					System.out.println("deleting:"+root.right.data);
+					//no one does
+					delete(root.left);
+					delete(root.right);
+					root.left = null;
+					root.right = null;
+					return false;
+				}
+			}
+		}
+		return false;//the code wouldn't come here.
+	}
+	
+	public static void printLeftView(Node root){
+		//The idea is to go with iterative level order traversal and at every level, print the first node.
+		
+		if(root == null){
+			return;
+		}
+		Node dummy = Node.dummy;
+		Queue<Node> queue = new LinkedList<>();
+		queue.add(root);
+		queue.add(dummy);
+		System.out.print(root.data+" ");
+		while(!queue.isEmpty()){
+			Node temp = queue.poll();
+			if(temp == null){
+				return; //not necessary
+			}
+			if(temp.equals(dummy)){
+				Node next = queue.peek();
+				if(next!= null && !next.equals(dummy)){
+					System.out.print(next.data+" ");
+					
+				}
+				continue;
+			}
+			if(temp.left != null){
+				queue.add(temp.left);
+			}
+			if(temp.right!=null){
+				queue.add(temp.right);
+			}
+			Node next = queue.peek();
+			if(next != null && next.equals(dummy)){
+				queue.add(dummy);
+			}
+		}
+	}
+	
+	public static boolean checkIfLeavesAreAtSameLevel(Node root){
+		if(root == null){
+			return true;
+		}
+		Node dummy = Node.dummy;
+		Queue<Node> q  = new LinkedList<>();
+		q.add(root);
+		q.add(dummy);
+		
+		//figure out the left most leaf level
+		int leftLeafLevel = -1;
+		Node temp = root;
+		while(temp != null){
+			temp = temp.left;
+			++leftLeafLevel;
+		}
+		
+		//base case
+		if(root.left == null && root.right == null){
+			return true;
+		}
+		int curlevel = 0;
+		//now go with level order traversal and check if all nodes at left leaf level or not.
+		while(!q.isEmpty()){
+			Node cur  = q.poll();
+			
+			if(cur.equals(dummy)){
+				++curlevel;
+				continue;
+			}
+			
+			//if the node is a leaf and is not a leftLeafLevel, then return false;
+			if((cur.left == null && cur.right == null) && curlevel != leftLeafLevel){
+				return false;
+			}
+			
+			if(cur.left != null){
+				q.add(cur.left);
+			}
+			if(cur.right !=null){
+				q.add(cur.right);
+			}
+			Node next = q.peek();
+			if(next.equals(dummy)){
+				q.add(dummy);
+			}
+		}
+		
+		
+		
+		return true;
+	}
+
 }
