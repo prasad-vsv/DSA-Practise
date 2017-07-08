@@ -1024,4 +1024,25 @@ public class BinaryTreeUtil {
 		return true;
 	}
 
+	public static void diagonalSum(Node root){
+		Map<Integer,Integer> map = new TreeMap<>();
+		_diagonalSum(root,map,0);
+		for(Map.Entry<Integer,Integer>  entry : map.entrySet()){
+			System.out.print(entry.getValue() +" ");
+		}
+	}
+	
+	private static void _diagonalSum(Node root, Map<Integer,Integer> map, int lefts){
+		if(root == null){
+			return;
+		}
+		if(!map.containsKey(lefts)){
+			map.put(lefts,0);
+		}
+		map.put(lefts, map.get(lefts) + root.data); //adding root.data to the corresponding lefts 
+		_diagonalSum(root.left, map, lefts+1);
+		_diagonalSum(root.right, map, lefts);
+	}
+	
+
 }

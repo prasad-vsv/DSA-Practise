@@ -230,5 +230,8 @@ public class BinaryTreeUtilsTest {
 		BinaryTreeUtil.printLeftView(createTree());
 		
 		System.out.println("checkIfLeavesAreAtSameLevel:" + BinaryTreeUtil.checkIfLeavesAreAtSameLevel(createTree()));
+		
+		System.out.println("diagonal sum:");
+		BinaryTreeUtil.diagonalSum(createTree());
 	}
 }

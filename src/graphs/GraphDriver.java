@@ -6,19 +6,26 @@ public class GraphDriver {
 
 
 	public static void main(String[] args) {
-		GraphUtils.bfs(createGraph(), 2);
+		GraphUtils.bfs(createGraph(), 0);
 		
-        GraphUtils.dfs(createGraph(),2);
+        GraphUtils.dfs(createGraph(),0);
 	}
 	
 	public static Graph createGraph(){
-		Graph g = new Graph();
-		g.addEdge(0, 1);
-        g.addEdge(0, 2);
-        g.addEdge(1, 2);
-        g.addEdge(2, 0);
-        g.addEdge(2, 3);
-        g.addEdge(3, 3);
+		Graph g = new Graph(false);
+		g.addEdge(1, 0);
+	    g.addEdge(2, 1);
+	    g.addEdge(3, 4);
+	    g.addEdge(4, 0);
+        return g;	
+	}
+	
+	public static Graph createDirectedGraph(){
+		Graph g = new Graph(true);
+		g.addEdge(1, 0);
+	    g.addEdge(2, 1);
+	    g.addEdge(3, 4);
+	    g.addEdge(4, 0);
         return g;	
 	}
 }
