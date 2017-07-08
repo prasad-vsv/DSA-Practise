@@ -15,14 +15,16 @@ public class GraphUtils {
 
 			while (!q.isEmpty()) {
 				Node n = q.poll();
-				if (set.contains(n)) {
-					continue; // dont process it again
-				}
 				set.add(n);
 				System.out.print(n.data + " ");
-				Set<Node> nodes = n.adjacencySet;
-				q.addAll(nodes);
-
+				// add n's connections
+				Set<Edge> edges = n.adjacencySet;
+				for (Edge e : edges) {
+					Node to = e.to; // from will always be n
+					if (!set.contains(to)) {
+						q.add(to);
+					}
+				}
 			}
 			// till now only the connected nodes of 2 will be traversed. if
 			// there is
@@ -57,14 +59,15 @@ public class GraphUtils {
 		while (true) {
 			while (!s.isEmpty()) {
 				Node n = s.pop();
-				if (set.contains(n)) {
-					// already visited. dont do any further processing
-					continue;
-				}
-
 				System.out.print(n.data + " ");
 				set.add(n);
-				s.addAll(n.adjacencySet);
+				Set<Edge> edges = n.adjacencySet;
+				for(Edge e:edges){
+					Node to = e.to;
+					if(!set.contains(to)){
+						s.push(to);
+					}
+				}
 			}
 			// till now only the connected nodes of 2 will be traversed. if
 			// there is

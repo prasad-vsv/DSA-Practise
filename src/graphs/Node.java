@@ -4,7 +4,8 @@ import java.util.*;
 
 public class Node {
 	int data;
-	Set<Node> adjacencySet;
+	// Set<Node> adjacencySet; This method wont scale for weighted graphs
+	Set<Edge> adjacencySet;
 
 	public Node() {
 		this.adjacencySet = new HashSet<>();
@@ -35,22 +36,18 @@ public class Node {
 class Edge {
 	Node to;
 	Node from;
-	int weight;
+	int weight = -1; // meaning not a weighted graph
+	boolean directional = false; // whether the edge is directional or not is
+									// the property of edge and graph but not of
+									// node itself
 
-	public Edge(Node to, Node from) {
+	public Edge(Node to, Node from, boolean directional) {
 		this.to = to;
 		this.from = from;
-		this.weight = 0;
 	}
 
-	public Edge(int to, int from) {
-		this.to = new Node(to);
-		this.from = new Node(from);
-		this.weight = 0;
-	}
-
-	public Edge(Node to, Node from, int weight) {
-		this(to, from);
+	public Edge(Node to, Node from, int weight, boolean directional) {
+		this(to, from, directional);
 		this.weight = weight;
 	}
 
@@ -81,26 +78,20 @@ class Graph {
 	}
 
 	public Graph addEdge(int a, int b) {
-
+		if (!nodes.containsKey(a)) {
+			nodes.put(a, new Node(a));
+		}
+		if (!nodes.containsKey(b)) {
+			nodes.put(b, new Node(b));
+		}
+		Edge e = new Edge(nodes.get(a), nodes.get(b), directed);
 		if (directed) {
-			if (!nodes.containsKey(a)) {
-				nodes.put(a, new Node(a));
-			}
-			if (!nodes.containsKey(b)) {
-				nodes.put(b, new Node(b));
-			}
-			nodes.get(a).adjacencySet.add(nodes.get(b));
+			nodes.get(a).adjacencySet.add(e);
 			// it is a directed graph and so it can only be considered that edge
 			// exists from a to b
 		} else {
-			if (!nodes.containsKey(a)) {
-				nodes.put(a, new Node(a));
-			}
-			if (!nodes.containsKey(b)) {
-				nodes.put(b, new Node(b));
-			}
-			nodes.get(a).adjacencySet.add(nodes.get(b));
-			nodes.get(b).adjacencySet.add(nodes.get(a));
+			nodes.get(a).adjacencySet.add(e);
+			nodes.get(b).adjacencySet.add(e);
 		}
 
 		return this;
