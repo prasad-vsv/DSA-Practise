@@ -41,14 +41,34 @@ class Edge {
 									// the property of edge and graph but not of
 									// node itself
 
-	public Edge(Node to, Node from, boolean directional) {
+	public Edge(Node from, Node to, boolean directional) {
 		this.to = to;
 		this.from = from;
 	}
 
-	public Edge(Node to, Node from, int weight, boolean directional) {
+	public Edge(Node from, Node to, int weight, boolean directional) {
 		this(to, from, directional);
 		this.weight = weight;
+	}
+	
+	public Node getDestination(Node from){
+		if(from == null){
+			return null;
+		}
+		if(this.directional){
+			return to;
+		}
+		Node to = (from.equals(this.from))? this.to:this.from; //return the opposite one
+		return to;
+	}
+	
+	@Override
+	public boolean equals(Object o){
+		if(!(o instanceof Edge)){
+			return false;
+		}
+		Edge e = (Edge) o;
+		return this.from.equals(e.from) && this.to.equals(e.to);
 	}
 
 	@Override
@@ -85,6 +105,26 @@ class Graph {
 			nodes.put(b, new Node(b));
 		}
 		Edge e = new Edge(nodes.get(a), nodes.get(b), directed);
+		if (directed) {
+			nodes.get(a).adjacencySet.add(e);
+			// it is a directed graph and so it can only be considered that edge
+			// exists from a to b
+		} else {
+			nodes.get(a).adjacencySet.add(e);
+			nodes.get(b).adjacencySet.add(e);
+		}
+
+		return this;
+	}
+	
+	public Graph addEdge(int a, int b, int weight) {
+		if (!nodes.containsKey(a)) {
+			nodes.put(a, new Node(a));
+		}
+		if (!nodes.containsKey(b)) {
+			nodes.put(b, new Node(b));
+		}
+		Edge e = new Edge(nodes.get(a), nodes.get(b), weight,  directed);
 		if (directed) {
 			nodes.get(a).adjacencySet.add(e);
 			// it is a directed graph and so it can only be considered that edge

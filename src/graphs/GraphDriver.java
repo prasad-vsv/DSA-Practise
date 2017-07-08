@@ -9,6 +9,11 @@ public class GraphDriver {
 		GraphUtils.bfs(createGraph(), 0);
 		
         GraphUtils.dfs(createGraph(),0);
+        
+        GraphUtils.topologicalSort(createDirectedGraph());
+        
+        GraphUtils.minimumSpanningtreeKruskal(createWeightedGraph());
+        GraphUtils.minimumSpanningTreePrim(createWeightedGraph());
 	}
 	
 	public static Graph createGraph(){
@@ -27,5 +32,15 @@ public class GraphDriver {
 	    g.addEdge(3, 4);
 	    g.addEdge(4, 0);
         return g;	
+	}
+	
+	public static Graph createWeightedGraph(){
+		Graph g = new Graph(false);
+		g.addEdge(0,1,10);
+		g.addEdge(0,2, 6);
+		g.addEdge(1,3,15);
+		g.addEdge(0,3,5);
+		g.addEdge(2,3, 4);
+		return g;
 	}
 }
