@@ -226,4 +226,87 @@ public class GraphUtils {
 		System.out.println("tree weight : " + sum);
 
 	}
+
+	public static boolean doesCycleExist(Graph g) {
+		// there are multiple ways. we coould use MST Kruskal's algorithm and if
+		// we see an edge that has both to and from in the visited set, then
+		// there is a cycle
+		// we could do DFS and at everystep we could see, if there is a neighbor
+		// other than the node that it came from, that is already in the visited
+		// set. if it is, then there is a cycle. This approach works only for
+		// Directed graphs. For undirected graphs, the node from which we
+		// reached the current node will already be in visited set and will
+		// again come as it's neighbor. we need to track parent to use this
+		// method in the case of undirected graphs
+		// we could go with MST Prim's algorithm and see all the outgoing edges
+		// from visited set and see if one of those edges is pointing back to
+		// one of the visited nodes.
+		// lets follow the DFS way now.
+
+		Set<Node> visited = new HashSet<>();
+		for (Map.Entry<Integer, Node> entry : g.nodes.entrySet()) {
+			Node n = entry.getValue();
+			if (!visited.contains(n)) {
+				boolean cycle = _doesCycleExist(n, null, visited);
+				if (cycle) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	private static boolean _doesCycleExist(Node start, Node from,
+			Set<Node> visited) {
+		visited.add(start);
+		boolean result = false;
+		for (Edge e : start.adjacencySet) {
+			Node end = e.getDestination(start);
+			if(end.equals(from)){
+				continue;
+			}
+			if (visited.contains(end)) {
+				return true;
+			} else {
+				boolean temp = _doesCycleExist(end, start, visited);
+				if (temp) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	
+	public static int numberOfIslands(Graph g){
+		int count = 0;
+		Set<Node> visited = new HashSet<>();
+		for(Map.Entry<Integer, Node> entry : g.nodes.entrySet()){
+			Node n = entry.getValue();
+			if(!visited.contains(n)){
+				++count;
+				_dfsIsland(n,visited);
+				System.out.println();
+			}
+		}
+		return count;
+	}
+	
+	private static void _dfsIsland(Node n, Set<Node> visited){
+		if(visited.contains(n)){
+			return;
+		}
+		Stack<Node> stack = new Stack<>();
+		stack.push(n);
+		while(!stack.isEmpty()){
+			Node start = stack.pop();
+			visited.add(start);
+			System.out.print(start.data+" ");
+			for(Edge e: start.adjacencySet){
+				Node end = e.getDestination(start);
+				if(!visited.contains(end)){
+					stack.push(end);
+				}
+			}
+		}
+	}
 }
