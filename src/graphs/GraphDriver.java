@@ -18,6 +18,8 @@ public class GraphDriver {
         System.out.println(GraphUtils.doesCycleExist(createGraph()));
         
         System.out.println("number of cycles : " + GraphUtils.numberOfIslands(createGraph()));
+        
+        GraphUtils.dfsRecursive(createGraph());
 	}
 	
 	public static Graph createGraph(){

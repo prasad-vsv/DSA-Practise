@@ -24,7 +24,7 @@ public class SudokuSolver {
 	public static void main(String[] args) {
 		printBoard();
 		System.out.println("solution below");
-		solve(new Positon(0,0));
+		solve(new Position(0,0));
 
 	}
 	
@@ -59,7 +59,7 @@ public class SudokuSolver {
 				//assuming that this is the correct number to be placed and then proceeding
 				board[p.x][p.y] = number;
 				int temp = count;
-				cpunt +=1 ;
+				count +=1 ;
 				printBoard();
 				if(p.x<8) {
 					//that means that there are more rows in the same column to be filled, hence proceed
@@ -78,17 +78,23 @@ public class SudokuSolver {
 		
 	}
 	
-	private static List<Integer> getPossibleNumber(Position p) {
+	private static List<Integer> getPossibleNumbers(Position p) {
 		List<Integer> possibleNumbers = new ArrayList<>();
-		for(unt i=1; i<10; ++i) {
+		for(int i=1; i<10; ++i) {
 			if(isValidMove(i,p)){
-				possibleNumber.add(i);
+				possibleNumbers.add(i);
 			}
 		}
 		return possibleNumbers;
 	}
 	
 	//private
+
+	private static boolean isValidMove(int i, Position p) {
+		// TODO Auto-generated method stub
+		//INCOMPLETE - fill this up
+		return false;
+	}
 
 	private static void printBoard() {
 		// TODO Auto-generated method stub

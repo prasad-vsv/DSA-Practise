@@ -156,7 +156,7 @@ public class GraphUtils {
 			}
 			Edge e = edges.pollFirst();
 			// now check if both the nodes connected by this edge are already
-			// visited.
+			// visited. This means that there is a cycle in the graph.
 			if (visited.contains(e.to) && visited.contains(e.from)) {
 				continue; // the node is not considered
 			}
@@ -307,6 +307,28 @@ public class GraphUtils {
 					stack.push(end);
 				}
 			}
+		}
+	}
+	
+	public static void dfsRecursive(Graph g){
+		Set<Node> visited = new HashSet<>();
+		for(Map.Entry<Integer,Node> entry: g.nodes.entrySet()){
+			Node n = entry.getValue();
+			if(!visited.contains(n)){
+				_dfsRecursive(n,visited);
+			}
+		}
+	}
+	
+	private static void _dfsRecursive(Node n, Set<Node> visited){
+		visited.add(n);
+		System.out.println(n.data + " ");
+		for(Edge e: n.adjacencySet){
+			Node to = e.getDestination(n);
+			if(!visited.contains(to)){
+				_dfsRecursive(to,visited);
+			}
+			
 		}
 	}
 }

@@ -147,8 +147,8 @@ public class BinaryTreeUtilsTest {
 		root.right = new Node(3);
 		root.left.left = new Node(4);
 		root.left.right = new Node(5);
-		root.right.left = new Node(6);
-		root.right.right = new Node(7);
+//		root.right.left = new Node(6);
+//		root.right.right = new Node(7);
 //		root.left.right.left = new Node(10);
 		return root;
 	}
@@ -233,5 +233,7 @@ public class BinaryTreeUtilsTest {
 		
 		System.out.println("diagonal sum:");
 		BinaryTreeUtil.diagonalSum(createTree());
+		System.out.println();
+		System.out.println("diameter:"+BinaryTreeUtil.diameter(createTree()));
 	}
 }
