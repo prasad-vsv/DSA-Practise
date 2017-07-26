@@ -143,6 +143,10 @@ public class BinaryTreeUtil {
 		Queue<Node> q = new LinkedList<>();
 		q.add(root);
 		q.add(dummy);
+		/*if(levelRequired == 0){
+			System.out.println(root);
+			return new ArrayList<>();
+		}*/
 		int level = 1;
 
 		while (!q.isEmpty()) {
@@ -1095,6 +1099,61 @@ public class BinaryTreeUtil {
 		//now the actual diameter calculation
 		return Math.max((1+l.h+r.h), Math.max(lMax,rMax));
 		
+	}
+	public static int printNodesAtKDistanceFromGivenNode(Node root, int key, int distance){
+		if(root == null){
+			return -1;
+		}
+		//if current node is the key
+		if(root.data == key){
+			//there are two ways to reach nodes that are at k distance
+			//1. the ones that exist in the subtree rooted at the current node
+			//2. the ones that can be reached through parent
+			List<Node> nodes = getNodesAtKDistanceFromRoot(root, distance);
+			for(Node n : nodes){
+				System.out.print(n);
+			}
+			return 1; //saying to parent that at one distance below we have the key
+		}
+		
+		//now recurse to left and right sub trees
+		int left = printNodesAtKDistanceFromGivenNode(root.left, key, distance);
+		int right = printNodesAtKDistanceFromGivenNode(root.right, key, distance);
+		
+		if(left == -1 && right == -1){
+			//that means that the key is not present in the tree rooted with this current element
+			return -1;
+		}
+		int parentDistanceFromKey = -1;
+		if(left !=-1 || right != -1){
+			
+			if(left != -1){
+				if(distance == left){
+					//that means the current element is at correct distance from key
+					System.out.print(root);
+					return 0;
+				}
+				
+				//that means that key was found in left sub tree. so get elements from right subtree
+				List<Node> nodes = getNodesAtKDistanceFromRoot(root.right, distance-left-1);
+				for(Node n : nodes){
+					System.out.print(n);
+				}
+				parentDistanceFromKey = left;
+			}else{
+				if(distance == left){
+					//that means the current element is at correct distance from key
+					System.out.print(root);
+					return 0;
+				}
+				List<Node> nodes = getNodesAtKDistanceFromRoot(root.left, distance-right-1);
+				for(Node n : nodes){
+					System.out.print(n);
+				}
+				parentDistanceFromKey = right;
+			}
+		}
+		return parentDistanceFromKey + 1; //to print nodes from ancestor
 	}
 
 }

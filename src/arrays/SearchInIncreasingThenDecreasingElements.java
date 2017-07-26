@@ -2,7 +2,7 @@ package arrays;
 
 import java.util.*;
 
-public class SearchInSortedRotatedArray {
+public class SearchInIncreasingThenDecreasingElements {
 	static Scanner s = new Scanner(System.in);
 
 	public static int getNextInt() {
@@ -142,63 +142,75 @@ public class SearchInSortedRotatedArray {
 	}
 
 	public static void main(String[] args) {
-//		int arr[] = { 5, 6, 7, 8, 9, 10, 1, 2, 3 };
-		int arr[]={30, 40, 50, 20, 10};
+		// this question is similar to search in sorted rotated array
+		// find the pivot first and then break the array into 2 parts. left part
+		// will be in increasing order and right side will be decreasing order
+		int arr[] = { 30, 40, 50, 20, 10 };
 		int key = 10;
-		// there are 2 ways to go about it. one is to find pivot and then break
-		// the array into two parts and do binary search on both
-		// other approach is to go with binary search directly and then at every
-		// step see if the part in which the sub array is sorted
-		/*for(int i=0; i<=10; ++i){
-			System.out.println("key is "+i + " and index is : "+pivotedBinarySearch(arr, i));
+		/*for(int i=0; i<; ++i){
+			
 		}*/
-		System.out.println(pivotedBinarySearch(arr, key));
-		
-
+		System.out.println(search(arr, key));
 	}
 
-	private static int pivotedBinarySearch(int[] in,int key){
-		int pivotIndex = findPivot(in,0,in.length-1);
-		if(pivotIndex == -1){
-			//that means that pivot is not there, that means simply do binary search on the entire array
-			return binarySearch(in,0,in.length-1,  key);
+	private static int search(int[] in, int key) {
+		int pivotIndex = findPivot(in, 0, in.length - 1);
+		if (pivotIndex == -1) {
+			// either it is totally increasing or totally decreasing
+			if (in[0] > in[in.length - 1]) {
+				return binarySearchDecreasing(in, 0, in.length - 1, key);
+			} else {
+				return binarySearch(in, 0, in.length - 1, key);
+			}
 		}
-		if(in[pivotIndex] == key){
-			return in[pivotIndex];
+		// check if pivot is the element
+		if (in[pivotIndex] == key) {
+			return pivotIndex;
 		}
-		//now break the array into to parts, to the left of the pivot and to the right
-		if(key >= in[0] && key <=in[pivotIndex-1]){
-			//that means that the element in the left side of pivot
+		//left part will be increasing order and right part will be in decreasing order
+		if(in[0]<key && in[pivotIndex-1] > key){
 			return binarySearch(in,0,pivotIndex-1,key);
-		}else{
-			return binarySearch(in,pivotIndex+1,in.length-1,key);
 		}
-		
+		else{
+			//that means the element must exist in the right part or -1 if it doesnt
+			return binarySearch(in, pivotIndex+1,in.length-1,key);
+		}
 	}
-
-	private static int findPivot(int[] in, int start, int end) {
-		// this is essentially modified binary search. Instead of searching for
-		// a key, we search for pivot
-		// the idea is that pivot is the place at which there is a break in the
-		// increasing order that starts from start
-		// it can be last index of the increasing sequence or the first one
-		// after the break. lets take the first one;
-		if(end<start){
-			return -1; //that means that there is no pivot
+	
+	private static int findPivot(int[] in, int start, int end){
+		if(end <start){
+			return -1;
 		}
 		int mid = (start+end)/2;
-		if(in[mid] > in[mid+1]){
-			//this happens only if mid is pivot.i.e, the last element in the increasing sequence starting from start
+		if((in[mid] >in[mid+1]) && (in[mid]<in[mid-1])&& (in[mid+1] > in[end]) && (in[start] <in[mid-1])){
+			//this can happen only when mid is pivot. right part is in descending order, left part is in ascending order
 			return mid;
 		}
-		if(in[mid]>in[start] ){
-			//that means that the left part is sorted. so search in right part
+		//now if the left part is in ascending order, then the pivot exists in the right side
+		if(in[mid]>in[mid-1] && in[start]<in[mid-1] ){
 			return findPivot(in,mid+1,end);
 		}
 		return findPivot(in,start,mid-1);
+		
 	}
 
 	private static int binarySearch(int[] in, int start, int end, int key) {
+		if (end < start) {
+			return -1; // element doesnt exist
+		}
+		int mid = (start + end) / 2;
+		if (key == in[mid]) {
+			return mid;
+		}
+		if (in[mid] > key) {
+			// search in the left part
+			return binarySearch(in, start, mid - 1, key);
+		}
+		return binarySearch(in, mid + 1, end, key);
+	}
+
+	private static int binarySearchDecreasing(int[] in, int start, int end,
+			int key) {
 		if (end < start) {
 			return -1;
 		}
@@ -206,10 +218,10 @@ public class SearchInSortedRotatedArray {
 		if (key == in[mid]) {
 			return mid;
 		}
-
-		if (key > in[mid]) {
-			return binarySearch(in, mid + 1, end, key);
+		if (in[mid] < key) {
+			// search in the left part
+			return binarySearchDecreasing(in, start, mid - 1, key);
 		}
-		return binarySearch(in, start, mid - 1, key);
+		return binarySearchDecreasing(in, mid + 1, end, key);
 	}
 }
