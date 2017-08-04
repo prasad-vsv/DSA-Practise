@@ -2,7 +2,7 @@ package DynamicProgramming;
 
 import java.util.*;
 
-public class LargestSumContiguouSubarray {
+public class BooleanParenthesization {
 	static Scanner s = new Scanner(System.in);
 
 	public static int getNextInt() {
@@ -140,32 +140,77 @@ public class LargestSumContiguouSubarray {
 			return s3;
 		}
 	}
-
-	public static void main(String[] args) {
-		// http://www.geeksforgeeks.org/largest-sum-contiguous-subarray/
-		int a[] = { -2, -3, 4, -1, -2, 1, 5, -3 };
-		System.out.println(solve(a));
-	}
-
-	public static int solve(int[] a) {
-		int maxSoFar = a[0]; // dont initialize with Integer.MIN_VALUE because
-								// if the elements are negative, it goes beyond
-								// the negative min range and starts from
-								// positive range in a circular fashion. so
-								// effectively, Integer.MIN_VALUE -2 =
-								// Integer.MAX_VALUE -1
-		int currentMax = a[0];
-		// the idea is that at every element, we can either consider that
-		// element and see backwards what is the sum containing that element, or
-		// if its best to take just that element, in case of negative sum for
-		// elements before
-		// the other way is to no consider this element and going with greatest
-		// sum so far
-		for (int i = 1; i < a.length; ++i) {
-			currentMax = max(currentMax + a[i], a[i]); // case 1
-			maxSoFar = max(currentMax, maxSoFar);
+	
+	private static boolean calc(int a, int b){
+		boolean result=false;
+		for(int i=a;i<b;++i){
+			char ac = act[a];
+			char next = act[a+1];
+			boolean ab = (ac == 'T')? true:false;
+			boolean nb = (next == 'T');
+			char o = ops[i];
+			switch(o){
+			case '|':
+				result= ab|nb;
+				break;
+			case '&':
+				result = ab&nb;
+				break;
+			case '^':
+				result = ab^nb;
+			}
 		}
-
-		return maxSoFar;
+		return result;
+	}
+	static String in = "T | T & F ^ T"; 
+	static char[] act = {'T','T','F','T'};
+	static char[] ops = {'|','&','^'};
+	public static void main(String[] args) {
+		//http://practice.geeksforgeeks.org/problems/boolean-parenthesization/0
+		
+		int len = 4;
+		boolean[][] cache = new boolean[len][len];
+		int[][] counts = new int[len][len];
+		for(int i=0;i<len;++i){
+			cache[i][i] = (act[i] == 'T');
+			if(cache[i][i]){
+				counts[i][i] = 1;
+			}else{
+				counts[i][i] = 0;
+			}
+		}
+		for(int l=2;l<=act.length;++l){
+			//l dictates the length of the substring to be considered
+			
+			for(int i=0; i<(act.length -l);++i){
+				int count = 0;
+				//i dictates the start index of the substring
+				int j = i+l-1; //j dictates the end index of the substring
+				for(int k = i; k<j;++k){
+					//k spans through the substring bounded by i and j and breaks it into 2. i...k, k+1...j;
+					//both will be directly available in the cache as they will be precalculated
+					boolean left = cache[i][k];
+					boolean right = cache[k+1][j];
+					boolean res =false;
+					char op = ops[i];
+					switch(op){
+					case '&':
+						res = left & right;
+						break;
+					case '^':
+						res = left ^ right;
+						break;
+					case '|':
+						res = left | right;
+						break;
+					}
+					if(res){
+						count += counts[i][k] + counts[k+1][j];
+					}
+				}
+				counts[i][j] = count;
+			}
+		}
+		System.out.println(counts[0][len-1]);
 	}
 }

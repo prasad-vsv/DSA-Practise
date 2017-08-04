@@ -2,7 +2,7 @@ package DynamicProgramming;
 
 import java.util.*;
 
-public class LargestSumContiguouSubarray {
+public class MaximumLengthChainOfPairs {
 	static Scanner s = new Scanner(System.in);
 
 	public static int getNextInt() {
@@ -142,30 +142,51 @@ public class LargestSumContiguouSubarray {
 	}
 
 	public static void main(String[] args) {
-		// http://www.geeksforgeeks.org/largest-sum-contiguous-subarray/
-		int a[] = { -2, -3, 4, -1, -2, 1, 5, -3 };
-		System.out.println(solve(a));
-	}
-
-	public static int solve(int[] a) {
-		int maxSoFar = a[0]; // dont initialize with Integer.MIN_VALUE because
-								// if the elements are negative, it goes beyond
-								// the negative min range and starts from
-								// positive range in a circular fashion. so
-								// effectively, Integer.MIN_VALUE -2 =
-								// Integer.MAX_VALUE -1
-		int currentMax = a[0];
-		// the idea is that at every element, we can either consider that
-		// element and see backwards what is the sum containing that element, or
-		// if its best to take just that element, in case of negative sum for
-		// elements before
-		// the other way is to no consider this element and going with greatest
-		// sum so far
-		for (int i = 1; i < a.length; ++i) {
-			currentMax = max(currentMax + a[i], a[i]); // case 1
-			maxSoFar = max(currentMax, maxSoFar);
+		//http://www.geeksforgeeks.org/dynamic-programming-set-20-maximum-length-chain-of-pairs/
+		// This is a variation of Longest Increasing Subsequence
+		Pair arr[] = new Pair[] {new Pair(5,24), new Pair(39,60), new Pair(15,28),
+                new Pair (27, 40), new Pair(50, 90)};
+		//sort only if the order of pairs in the final set doesnt matter
+		Arrays.sort(arr,new PairComparator());
+		
+		int[] dp = new int[arr.length];
+		//base case: first element can always be considered as a unique set
+		dp[0] = 1;
+		
+		for(int i=1; i<arr.length;++i){
+			Pair p = arr[i];
+			int max = Integer.MIN_VALUE;
+			for(int j=0; j<i;++j){
+				Pair temp = arr[j];
+				if(temp.b < p.a && max < dp[j] ){
+					max = dp[j];
+				}
+			}
+			dp[i] = max + 1; //considering the current pair
 		}
-
-		return maxSoFar;
+		System.out.println(dp[arr.length-1]);
 	}
+}
+
+class Pair{
+	Integer a;
+	Integer b;
+	
+	public Pair(int _a, int _b){
+		a = _a;
+		b = _b;
+	}
+	
+	public String toString(){
+		return a+":" +b;
+	}
+}
+
+class PairComparator implements Comparator<Pair>{
+
+	@Override
+	public int compare(Pair o1, Pair o2) {
+		return o1.a.compareTo(o2.a);
+	}
+	
 }

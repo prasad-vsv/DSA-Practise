@@ -2,7 +2,7 @@ package DynamicProgramming;
 
 import java.util.*;
 
-public class LargestSumContiguouSubarray {
+public class TextJustification {
 	static Scanner s = new Scanner(System.in);
 
 	public static int getNextInt() {
@@ -142,30 +142,6 @@ public class LargestSumContiguouSubarray {
 	}
 
 	public static void main(String[] args) {
-		// http://www.geeksforgeeks.org/largest-sum-contiguous-subarray/
-		int a[] = { -2, -3, 4, -1, -2, 1, 5, -3 };
-		System.out.println(solve(a));
-	}
-
-	public static int solve(int[] a) {
-		int maxSoFar = a[0]; // dont initialize with Integer.MIN_VALUE because
-								// if the elements are negative, it goes beyond
-								// the negative min range and starts from
-								// positive range in a circular fashion. so
-								// effectively, Integer.MIN_VALUE -2 =
-								// Integer.MAX_VALUE -1
-		int currentMax = a[0];
-		// the idea is that at every element, we can either consider that
-		// element and see backwards what is the sum containing that element, or
-		// if its best to take just that element, in case of negative sum for
-		// elements before
-		// the other way is to no consider this element and going with greatest
-		// sum so far
-		for (int i = 1; i < a.length; ++i) {
-			currentMax = max(currentMax + a[i], a[i]); // case 1
-			maxSoFar = max(currentMax, maxSoFar);
-		}
-
-		return maxSoFar;
+		
 	}
 }
