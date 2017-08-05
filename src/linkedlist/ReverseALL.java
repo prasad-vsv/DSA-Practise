@@ -165,7 +165,6 @@ public class ReverseALL {
 		Node h,t;
 		h = head;
 		t = head;
-		Node cur = head;
 		Node rem = null;
 		Node ret = null;
 		Node retTail = null;
